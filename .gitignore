@@ -1,0 +1,16 @@
+# Dependency directories
+node_modules/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment variables
+.env
+
+# MacOS system files
+.DS_Store
+
+# Test coverage
+coverage/

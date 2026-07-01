@@ -2,12 +2,6 @@ const path = require('path');
 const Database = require('better-sqlite3');
 const bcrypt = require('bcryptjs');
 
-// ---------------------------------------------------------------------------
-// Create an isolated in-memory database for tests so that the real DB is never
-// touched. We replicate the same schema that db/database.js uses.
-// ---------------------------------------------------------------------------
-
-// Must use 'mock' prefix so Jest allows referencing it inside jest.mock()
 const mockDb = new Database(':memory:');
 mockDb.pragma('journal_mode = WAL');
 mockDb.pragma('foreign_keys = ON');
@@ -68,22 +62,14 @@ mockDb.exec(`
   );
 `);
 
-// ---------------------------------------------------------------------------
-// Shared test data references – populated by seedTestData()
-// ---------------------------------------------------------------------------
-
 let testAdmin = null;
 let testUser = null;
 let testEvent = null;
 let testVenue = null;
 let testActivity = null;
 
-/**
- * Clears every table and inserts a predictable set of seed rows.
- * Call this inside beforeEach() / beforeAll() to get a clean slate.
- */
 function seedTestData() {
-  // Disable FK checks while truncating to avoid ordering issues
+
   mockDb.pragma('foreign_keys = OFF');
 
   mockDb.exec(`
@@ -98,7 +84,6 @@ function seedTestData() {
 
   mockDb.pragma('foreign_keys = ON');
 
-  // --- Admin user ---
   const adminHash = bcrypt.hashSync('password123', 10);
   const adminInsert = mockDb.prepare(
     `INSERT INTO users (name, email, phone, password_hash, role)
@@ -114,7 +99,6 @@ function seedTestData() {
     role: 'admin'
   };
 
-  // --- Regular user ---
   const userHash = bcrypt.hashSync('password123', 10);
   const userInsert = mockDb.prepare(
     `INSERT INTO users (name, email, phone, password_hash, role)
@@ -130,7 +114,6 @@ function seedTestData() {
     role: 'user'
   };
 
-  // --- Venue ---
   const venueInsert = mockDb.prepare(
     `INSERT INTO venues (name, address, capacity) VALUES (?, ?, ?)`
   );
@@ -143,7 +126,6 @@ function seedTestData() {
     capacity: 200
   };
 
-  // --- Activity ---
   const activityInsert = mockDb.prepare(
     `INSERT INTO activities (name, description) VALUES (?, ?)`
   );
@@ -155,7 +137,6 @@ function seedTestData() {
     description: 'Hands-on coding workshop'
   };
 
-  // --- Event ---
   const eventInsert = mockDb.prepare(
     `INSERT INTO events (name, description, date, time, created_by)
      VALUES (?, ?, ?, ?, ?)`
@@ -176,7 +157,6 @@ function seedTestData() {
     time: '14:00'
   };
 
-  // Link event ↔ venue & activity
   mockDb.prepare(`INSERT INTO event_venues (event_id, venue_id) VALUES (?, ?)`)
     .run(testEvent.id, testVenue.id);
 
@@ -184,18 +164,9 @@ function seedTestData() {
     .run(testEvent.id, testActivity.id);
 }
 
-// ---------------------------------------------------------------------------
-// Mock the database module so the app uses our in-memory DB.
-// Jest allows variables prefixed with 'mock' inside jest.mock() factories.
-// ---------------------------------------------------------------------------
-
 jest.mock('../db/database', () => mockDb);
 
 const app = require('../app');
-
-// ---------------------------------------------------------------------------
-// Exports
-// ---------------------------------------------------------------------------
 
 module.exports = {
   app,

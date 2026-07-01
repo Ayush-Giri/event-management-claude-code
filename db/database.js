@@ -4,13 +4,9 @@ const path = require('path');
 const dbPath = path.join(__dirname, 'community_events.db');
 const db = new Database(dbPath);
 
-// Enable WAL mode for better concurrent read performance
 db.pragma('journal_mode = WAL');
 
-// Enable foreign key enforcement
 db.pragma('foreign_keys = ON');
-
-// --- Create Tables ---
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (

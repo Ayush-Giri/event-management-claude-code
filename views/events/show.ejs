@@ -1,7 +1,7 @@
 <%- include('../partials/header') %>
 
 <div class="container">
-  <!-- Event Hero Section -->
+  
   <section class="event-hero">
     <div class="event-hero-content">
       <h1 class="event-hero-title"><%= event.name %></h1>
@@ -21,10 +21,9 @@
     </div>
   </section>
 
-  <!-- Event Details -->
   <div class="event-detail-grid">
     <div class="event-detail-main">
-      <!-- Description -->
+      
       <section class="card event-detail-section">
         <h2 class="section-title">About This Event</h2>
         <div class="event-description">
@@ -32,7 +31,6 @@
         </div>
       </section>
 
-      <!-- Venues -->
       <% if (venues && venues.length > 0) { %>
         <section class="card event-detail-section">
           <h2 class="section-title">Venues</h2>
@@ -54,7 +52,6 @@
         </section>
       <% } %>
 
-      <!-- Activities -->
       <% if (activities && activities.length > 0) { %>
         <section class="card event-detail-section">
           <h2 class="section-title">Activities</h2>
@@ -71,7 +68,6 @@
         </section>
       <% } %>
 
-      <!-- Participants List -->
       <section class="card event-detail-section">
         <h2 class="section-title">Participants (<%= participants.length %>)</h2>
         <% if (participants.length > 0) { %>
@@ -89,9 +85,8 @@
       </section>
     </div>
 
-    <!-- Sidebar -->
     <aside class="event-detail-sidebar">
-      <!-- Registration Card -->
+      
       <div class="card registration-card">
         <h3 class="registration-title">Registration</h3>
         <% if (typeof user === 'undefined' || !user) { %>
@@ -113,7 +108,6 @@
         <% } %>
       </div>
 
-      <!-- Admin Actions -->
       <% if (typeof user !== 'undefined' && user && user.role === 'admin') { %>
         <div class="card admin-actions-card">
           <h3 class="admin-actions-title">Admin Actions</h3>

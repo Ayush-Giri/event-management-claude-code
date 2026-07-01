@@ -6,7 +6,6 @@
     <p class="page-header-subtitle"><%= participants.length %> participant<%= participants.length !== 1 ? 's' : '' %> registered</p>
   </div>
 
-  <!-- Add New Participant Form -->
   <section class="card form-section">
     <details class="collapsible-form" open>
       <summary class="collapsible-header">
@@ -68,7 +67,6 @@
     </details>
   </section>
 
-  <!-- Participants Table -->
   <section class="card table-section">
     <% if (participants.length > 0) { %>
       <div class="table-responsive">
@@ -94,7 +92,7 @@
                   </form>
                 </td>
               </tr>
-              <!-- Inline Edit Form (hidden by default) -->
+              
               <tr class="edit-row" id="edit-participant-<%= participant.id %>" style="display: none;">
                 <td colspan="4">
                   <form class="form inline-edit-form" method="POST" action="/admin/participants/<%= participant.id %>">

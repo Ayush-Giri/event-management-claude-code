@@ -6,7 +6,6 @@
     <p class="page-header-subtitle"><%= activities.length %> activit<%= activities.length !== 1 ? 'ies' : 'y' %> available</p>
   </div>
 
-  <!-- Add New Activity Form -->
   <section class="card form-section">
     <details class="collapsible-form" open>
       <summary class="collapsible-header">
@@ -43,7 +42,6 @@
     </details>
   </section>
 
-  <!-- Activities Table -->
   <section class="card table-section">
     <% if (activities.length > 0) { %>
       <div class="table-responsive">
@@ -67,7 +65,7 @@
                   </form>
                 </td>
               </tr>
-              <!-- Inline Edit Form -->
+              
               <tr class="edit-row" id="edit-activity-<%= activity.id %>" style="display: none;">
                 <td colspan="3">
                   <form class="form inline-edit-form" method="POST" action="/admin/activities/<%= activity.id %>">

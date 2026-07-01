@@ -6,7 +6,6 @@
     <p class="page-header-subtitle"><%= venues.length %> venue<%= venues.length !== 1 ? 's' : '' %> available</p>
   </div>
 
-  <!-- Add New Venue Form -->
   <section class="card form-section">
     <details class="collapsible-form" open>
       <summary class="collapsible-header">
@@ -57,7 +56,6 @@
     </details>
   </section>
 
-  <!-- Venues Table -->
   <section class="card table-section">
     <% if (venues.length > 0) { %>
       <div class="table-responsive">
@@ -83,7 +81,7 @@
                   </form>
                 </td>
               </tr>
-              <!-- Inline Edit Form -->
+              
               <tr class="edit-row" id="edit-venue-<%= venue.id %>" style="display: none;">
                 <td colspan="4">
                   <form class="form inline-edit-form" method="POST" action="/admin/venues/<%= venue.id %>">

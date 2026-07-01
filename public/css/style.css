@@ -442,6 +442,54 @@ select.form-control {
   margin-bottom: 0;
 }
 
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  background-color: #fff;
+}
+
+.checkbox-label:hover {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--accent-primary);
+}
+
+.checkbox-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkbox-text strong {
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.checkbox-text small {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
 /* ==========================================================================
    Page Headers
    ========================================================================== */
