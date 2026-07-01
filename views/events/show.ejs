@@ -1,0 +1,132 @@
+<%- include('../partials/header') %>
+
+<div class="container">
+  <!-- Event Hero Section -->
+  <section class="event-hero">
+    <div class="event-hero-content">
+      <h1 class="event-hero-title"><%= event.name %></h1>
+      <div class="event-hero-meta">
+        <span class="event-meta-item">
+          <span class="meta-icon"></span>
+          <%= new Date(event.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
+          <% if (event.time) { %>
+            at <%= event.time %>
+          <% } %>
+        </span>
+        <span class="event-meta-item">
+          <span class="meta-icon"></span>
+          <%= participants.length %> participant<%= participants.length !== 1 ? 's' : '' %> registered
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Event Details -->
+  <div class="event-detail-grid">
+    <div class="event-detail-main">
+      <!-- Description -->
+      <section class="card event-detail-section">
+        <h2 class="section-title">About This Event</h2>
+        <div class="event-description">
+          <p><%= event.description || 'No description provided for this event.' %></p>
+        </div>
+      </section>
+
+      <!-- Venues -->
+      <% if (venues && venues.length > 0) { %>
+        <section class="card event-detail-section">
+          <h2 class="section-title">Venues</h2>
+          <div class="venue-cards">
+            <% venues.forEach(function(venue) { %>
+              <div class="venue-card">
+                <h3 class="venue-card-name"><%= venue.name %></h3>
+                <% if (venue.address) { %>
+                  <p class="venue-card-address"><%= venue.address %></p>
+                <% } %>
+                <% if (venue.capacity) { %>
+                  <span class="venue-card-capacity">
+                    <span class="meta-icon"></span> Capacity: <%= venue.capacity %>
+                  </span>
+                <% } %>
+              </div>
+            <% }); %>
+          </div>
+        </section>
+      <% } %>
+
+      <!-- Activities -->
+      <% if (activities && activities.length > 0) { %>
+        <section class="card event-detail-section">
+          <h2 class="section-title">Activities</h2>
+          <div class="activity-tags">
+            <% activities.forEach(function(activity) { %>
+              <span class="badge badge-activity badge-lg">
+                <%= activity.name %>
+                <% if (activity.description) { %>
+                  <span class="badge-tooltip"><%= activity.description %></span>
+                <% } %>
+              </span>
+            <% }); %>
+          </div>
+        </section>
+      <% } %>
+
+      <!-- Participants List -->
+      <section class="card event-detail-section">
+        <h2 class="section-title">Participants (<%= participants.length %>)</h2>
+        <% if (participants.length > 0) { %>
+          <ul class="participant-list">
+            <% participants.forEach(function(participant) { %>
+              <li class="participant-item">
+                <span class="participant-avatar"><%= participant.name.charAt(0).toUpperCase() %></span>
+                <span class="participant-name"><%= participant.name %></span>
+              </li>
+            <% }); %>
+          </ul>
+        <% } else { %>
+          <p class="text-muted">No participants have registered yet. Be the first!</p>
+        <% } %>
+      </section>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="event-detail-sidebar">
+      <!-- Registration Card -->
+      <div class="card registration-card">
+        <h3 class="registration-title">Registration</h3>
+        <% if (typeof user === 'undefined' || !user) { %>
+          <p class="text-muted">You need to be logged in to register for this event.</p>
+          <a href="/auth/login" class="btn btn-primary btn-block">Log in to Register</a>
+        <% } else if (isRegistered) { %>
+          <div class="registration-status registration-confirmed">
+            <span class="registration-status-icon"></span>
+            <p>You're registered!</p>
+          </div>
+          <form class="form" method="POST" action="/events/<%= event.id %>/unregister">
+            <button type="submit" class="btn btn-danger btn-block">Unregister</button>
+          </form>
+        <% } else { %>
+          <p class="text-muted">Secure your spot at this event.</p>
+          <form class="form" method="POST" action="/events/<%= event.id %>/register">
+            <button type="submit" class="btn btn-primary btn-block">Register Now</button>
+          </form>
+        <% } %>
+      </div>
+
+      <!-- Admin Actions -->
+      <% if (typeof user !== 'undefined' && user && user.role === 'admin') { %>
+        <div class="card admin-actions-card">
+          <h3 class="admin-actions-title">Admin Actions</h3>
+          <div class="admin-actions">
+            <a href="/events/<%= event.id %>/edit" class="btn btn-secondary btn-block">Edit Event</a>
+            <form class="form" method="POST" action="/events/<%= event.id %>/delete" style="margin-top: 0.5rem;">
+              <button type="submit" class="btn btn-danger btn-block" onclick="return confirm('Are you sure you want to delete this event? This action cannot be undone.')">Delete Event</button>
+            </form>
+          </div>
+        </div>
+      <% } %>
+    </aside>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

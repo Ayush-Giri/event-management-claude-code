@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | Community Events</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/events" class="nav-logo">
+        <span class="logo-icon"></span>
+        <span class="logo-text">Community<span class="logo-highlight">Events</span></span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="/events" class="nav-link">Events</a></li>
+        <% if (typeof user !== 'undefined' && user) { %>
+          <li><a href="/my-registrations" class="nav-link">My Registrations</a></li>
+          <% if (user.role === 'admin') { %>
+            <li><a href="/admin" class="nav-link nav-admin">Admin</a></li>
+          <% } %>
+          <li class="nav-user">
+            <span class="nav-user-name"><%= user.name %></span>
+            <a href="/auth/logout" class="nav-link nav-logout">Logout</a>
+          </li>
+        <% } else { %>
+          <li><a href="/auth/login" class="nav-link">Login</a></li>
+          <li><a href="/auth/register" class="btn btn-primary btn-sm">Sign Up</a></li>
+        <% } %>
+      </ul>
+    </div>
+  </nav>
+  <main class="main-content">
+    <% if (typeof messages !== 'undefined' && messages) { %>
+      <% if (messages.error && messages.error.length > 0) { %>
+        <% messages.error.forEach(function(msg) { %>
+          <div class="alert alert-error"><span class="alert-icon"></span> <%= msg %></div>
+        <% }); %>
+      <% } %>
+      <% if (messages.success && messages.success.length > 0) { %>
+        <% messages.success.forEach(function(msg) { %>
+          <div class="alert alert-success"><span class="alert-icon"></span> <%= msg %></div>
+        <% }); %>
+      <% } %>
+    <% } %>

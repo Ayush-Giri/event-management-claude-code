@@ -1,0 +1,65 @@
+<%- include('../partials/header') %>
+
+<div class="container">
+  <div class="page-header">
+    <h1>My Registrations</h1>
+    <p class="page-header-subtitle">Events you've signed up for</p>
+  </div>
+
+  <% if (registrations && registrations.length > 0) { %>
+    <section class="registrations-grid">
+      <% registrations.forEach(function(reg) { %>
+        <article class="card registration-card-item">
+          <div class="registration-card-header">
+            <h3 class="registration-event-name">
+              <a href="/events/<%= reg.event_id %>"><%= reg.event_name %></a>
+            </h3>
+            <% if (reg.status) { %>
+              <span class="badge badge-<%= reg.status === 'confirmed' ? 'success' : (reg.status === 'cancelled' ? 'danger' : 'warning') %>">
+                <%= reg.status.charAt(0).toUpperCase() + reg.status.slice(1) %>
+              </span>
+            <% } %>
+          </div>
+          <div class="registration-card-body">
+            <div class="event-card-meta">
+              <span class="event-meta-item">
+                <span class="meta-icon"></span>
+                <%= new Date(reg.event_date).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) %>
+                <% if (reg.event_time) { %>
+                  at <%= reg.event_time %>
+                <% } %>
+              </span>
+              <% if (reg.venue_names) { %>
+                <span class="event-meta-item">
+                  <span class="meta-icon"></span>
+                  <%= reg.venue_names %>
+                </span>
+              <% } %>
+              <% if (reg.registration_date) { %>
+                <span class="event-meta-item">
+                  <span class="meta-icon"></span>
+                  Registered: <%= new Date(reg.registration_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %>
+                </span>
+              <% } %>
+            </div>
+          </div>
+          <div class="registration-card-footer">
+            <a href="/events/<%= reg.event_id %>" class="btn btn-secondary btn-sm">View Event</a>
+            <form class="form inline-form" method="POST" action="/events/<%= reg.event_id %>/unregister">
+              <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to unregister from this event?')">Unregister</button>
+            </form>
+          </div>
+        </article>
+      <% }); %>
+    </section>
+  <% } else { %>
+    <section class="empty-state">
+      <div class="empty-state-icon"></div>
+      <h2 class="empty-state-title">No Registrations Yet</h2>
+      <p class="empty-state-text">You haven't registered for any events yet. Browse our upcoming events to find something exciting!</p>
+      <a href="/events" class="btn btn-primary">Browse Events</a>
+    </section>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,112 @@
+<%- include('../partials/header') %>
+
+<div class="container">
+  <div class="page-header">
+    <h1>Manage Activities</h1>
+    <p class="page-header-subtitle"><%= activities.length %> activit<%= activities.length !== 1 ? 'ies' : 'y' %> available</p>
+  </div>
+
+  <!-- Add New Activity Form -->
+  <section class="card form-section">
+    <details class="collapsible-form" open>
+      <summary class="collapsible-header">
+        <h2 class="section-title">Add New Activity</h2>
+      </summary>
+      <form class="form" method="POST" action="/admin/activities">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="add-activity-name" class="form-label">Activity Name</label>
+            <input
+              type="text"
+              id="add-activity-name"
+              name="name"
+              class="form-control"
+              placeholder="e.g., Workshop, Seminar, Concert"
+              required
+            >
+          </div>
+          <div class="form-group">
+            <label for="add-activity-description" class="form-label">Description</label>
+            <input
+              type="text"
+              id="add-activity-description"
+              name="description"
+              class="form-control"
+              placeholder="Brief description of the activity"
+            >
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Add Activity</button>
+        </div>
+      </form>
+    </details>
+  </section>
+
+  <!-- Activities Table -->
+  <section class="card table-section">
+    <% if (activities.length > 0) { %>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% activities.forEach(function(activity) { %>
+              <tr class="activity-row" id="activity-row-<%= activity.id %>">
+                <td><strong><%= activity.name %></strong></td>
+                <td><%= activity.description || '—' %></td>
+                <td class="table-actions">
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="toggleEditForm('activity-<%= activity.id %>')">Edit</button>
+                  <form class="form inline-form" method="POST" action="/admin/activities/<%= activity.id %>/delete">
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this activity?')">Delete</button>
+                  </form>
+                </td>
+              </tr>
+              <!-- Inline Edit Form -->
+              <tr class="edit-row" id="edit-activity-<%= activity.id %>" style="display: none;">
+                <td colspan="3">
+                  <form class="form inline-edit-form" method="POST" action="/admin/activities/<%= activity.id %>">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input type="text" name="name" class="form-control" value="<%= activity.name %>" required>
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <input type="text" name="description" class="form-control" value="<%= activity.description || '' %>">
+                      </div>
+                      <div class="form-group form-actions-inline">
+                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="toggleEditForm('activity-<%= activity.id %>')">Cancel</button>
+                      </div>
+                    </div>
+                  </form>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <div class="empty-state empty-state-sm">
+        <p class="text-muted">No activities added yet.</p>
+      </div>
+    <% } %>
+  </section>
+</div>
+
+<script>
+  function toggleEditForm(id) {
+    var editRow = document.getElementById('edit-' + id);
+    if (editRow) {
+      editRow.style.display = editRow.style.display === 'none' ? 'table-row' : 'none';
+    }
+  }
+</script>
+
+<%- include('../partials/footer') %>

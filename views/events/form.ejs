@@ -1,0 +1,121 @@
+<%- include('../partials/header') %>
+
+<div class="container">
+  <div class="page-header">
+    <h1><%= event ? 'Edit Event' : 'Create New Event' %></h1>
+  </div>
+
+  <div class="form-card card">
+    <form class="form" method="POST" action="<%= event ? '/events/' + event.id : '/events' %>">
+      <div class="form-group">
+        <label for="name" class="form-label">Event Name</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          class="form-control"
+          placeholder="Enter event name"
+          required
+          value="<%= event ? event.name : '' %>"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+          id="description"
+          name="description"
+          class="form-control"
+          rows="5"
+          placeholder="Describe your event..."
+        ><%= event ? event.description : '' %></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="date" class="form-label">Date</label>
+          <input
+            type="date"
+            id="date"
+            name="date"
+            class="form-control"
+            required
+            value="<%= event && event.date ? new Date(event.date).toISOString().split('T')[0] : '' %>"
+          >
+        </div>
+        <div class="form-group">
+          <label for="time" class="form-label">Time</label>
+          <input
+            type="time"
+            id="time"
+            name="time"
+            class="form-control"
+            required
+            value="<%= event && event.time ? event.time : '' %>"
+          >
+        </div>
+      </div>
+
+      <!-- Venues Checkboxes -->
+      <div class="form-group">
+        <label class="form-label">Venues</label>
+        <div class="checkbox-grid">
+          <% if (typeof venues !== 'undefined' && venues) { %>
+            <% venues.forEach(function(venue) { %>
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="venue_ids"
+                  value="<%= venue.id %>"
+                  <%= (typeof selectedVenues !== 'undefined' && selectedVenues && selectedVenues.includes(venue.id)) ? 'checked' : '' %>
+                >
+                <span class="checkbox-custom"></span>
+                <span class="checkbox-text">
+                  <strong><%= venue.name %></strong>
+                  <% if (venue.address) { %>
+                    <small><%= venue.address %></small>
+                  <% } %>
+                </span>
+              </label>
+            <% }); %>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Activities Checkboxes -->
+      <div class="form-group">
+        <label class="form-label">Activities</label>
+        <div class="checkbox-grid">
+          <% if (typeof activities !== 'undefined' && activities) { %>
+            <% activities.forEach(function(activity) { %>
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="activity_ids"
+                  value="<%= activity.id %>"
+                  <%= (typeof selectedActivities !== 'undefined' && selectedActivities && selectedActivities.includes(activity.id)) ? 'checked' : '' %>
+                >
+                <span class="checkbox-custom"></span>
+                <span class="checkbox-text">
+                  <strong><%= activity.name %></strong>
+                  <% if (activity.description) { %>
+                    <small><%= activity.description %></small>
+                  <% } %>
+                </span>
+              </label>
+            <% }); %>
+          <% } %>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+          <%= event ? 'Update Event' : 'Create Event' %>
+        </button>
+        <a href="/events" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

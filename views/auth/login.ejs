@@ -1,0 +1,47 @@
+<%- include('../partials/header') %>
+
+<section class="auth-section">
+  <div class="container">
+    <div class="auth-card card">
+      <div class="auth-header">
+        <h1 class="auth-title">Welcome Back</h1>
+        <p class="auth-subtitle">Sign in to manage your events and registrations</p>
+      </div>
+      <form class="form" method="POST" action="/auth/login">
+        <div class="form-group">
+          <label for="email" class="form-label">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form-control"
+            placeholder="you@example.com"
+            required
+            autocomplete="email"
+          >
+        </div>
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-control"
+            placeholder="Enter your password"
+            required
+            minlength="6"
+            autocomplete="current-password"
+          >
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+        </div>
+      </form>
+      <div class="auth-footer">
+        <p>Don't have an account? <a href="/auth/register" class="auth-link">Sign up</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

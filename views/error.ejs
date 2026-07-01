@@ -1,0 +1,24 @@
+<%- include('./partials/header') %>
+
+<div class="container">
+  <section class="error-page">
+    <div class="error-content">
+      <h1 class="error-code"><%= typeof statusCode !== 'undefined' ? statusCode : 500 %></h1>
+      <h2 class="error-title">
+        <% if (typeof statusCode !== 'undefined' && statusCode === 404) { %>
+          Page Not Found
+        <% } else if (typeof statusCode !== 'undefined' && statusCode === 403) { %>
+          Access Denied
+        <% } else { %>
+          Something Went Wrong
+        <% } %>
+      </h2>
+      <p class="error-message"><%= typeof message !== 'undefined' ? message : 'An unexpected error occurred.' %></p>
+      <div class="error-actions">
+        <a href="/events" class="btn btn-primary">Back to Home</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<%- include('./partials/footer') %>
