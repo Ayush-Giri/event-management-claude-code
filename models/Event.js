@@ -54,11 +54,11 @@ class Event {
     `).get(id);
   }
 
-  static create(name, description, date, time, createdBy, venueIds = [], activityIds = []) {
+  static create(name, description, date, time, createdBy, venueIds = [], activityIds = [], image = null) {
     const transaction = db.transaction(() => {
       const result = db.prepare(
-        'INSERT INTO events (name, description, date, time, created_by) VALUES (?, ?, ?, ?, ?)'
-      ).run(name, description || null, date, time, createdBy);
+        'INSERT INTO events (name, description, date, time, created_by, image) VALUES (?, ?, ?, ?, ?, ?)'
+      ).run(name, description || null, date, time, createdBy, image);
   
       const eventId = result.lastInsertRowid;
   
@@ -78,11 +78,17 @@ class Event {
     return transaction();
   }
 
-  static update(id, name, description, date, time, venueIds = [], activityIds = []) {
+  static update(id, name, description, date, time, venueIds = [], activityIds = [], image = undefined) {
     const transaction = db.transaction(() => {
-      db.prepare(
-        'UPDATE events SET name = ?, description = ?, date = ?, time = ? WHERE id = ?'
-      ).run(name, description || null, date, time, id);
+      if (image !== undefined) {
+        db.prepare(
+          'UPDATE events SET name = ?, description = ?, date = ?, time = ?, image = ? WHERE id = ?'
+        ).run(name, description || null, date, time, image, id);
+      } else {
+        db.prepare(
+          'UPDATE events SET name = ?, description = ?, date = ?, time = ? WHERE id = ?'
+        ).run(name, description || null, date, time, id);
+      }
   
       db.prepare('DELETE FROM event_venues WHERE event_id = ?').run(id);
       db.prepare('DELETE FROM event_activities WHERE event_id = ?').run(id);
@@ -107,6 +113,10 @@ class Event {
 
   static getStats() {
     return db.prepare('SELECT COUNT(*) as count FROM events').get().count;
+  }
+
+  static removeImage(id) {
+    db.prepare('UPDATE events SET image = NULL WHERE id = ?').run(id);
   }
 }
 

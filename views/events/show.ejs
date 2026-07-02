@@ -1,8 +1,13 @@
 <%- include('../partials/header') %>
 
 <div class="container">
-  
+
   <section class="event-hero">
+    <% if (event.image) { %>
+      <div class="event-hero-image">
+        <img src="/uploads/<%= event.image %>" alt="<%= event.name %>">
+      </div>
+    <% } %>
     <div class="event-hero-content">
       <h1 class="event-hero-title"><%= event.name %></h1>
       <div class="event-hero-meta">
@@ -23,7 +28,7 @@
 
   <div class="event-detail-grid">
     <div class="event-detail-main">
-      
+
       <section class="card event-detail-section">
         <h2 class="section-title">About This Event</h2>
         <div class="event-description">
@@ -37,6 +42,11 @@
           <div class="venue-cards">
             <% venues.forEach(function(venue) { %>
               <div class="venue-card">
+                <% if (venue.image) { %>
+                  <div class="venue-card-image">
+                    <img src="/uploads/<%= venue.image %>" alt="<%= venue.name %>">
+                  </div>
+                <% } %>
                 <h3 class="venue-card-name"><%= venue.name %></h3>
                 <% if (venue.address) { %>
                   <p class="venue-card-address"><%= venue.address %></p>
@@ -86,7 +96,7 @@
     </div>
 
     <aside class="event-detail-sidebar">
-      
+
       <div class="card registration-card">
         <h3 class="registration-title">Registration</h3>
         <% if (typeof user === 'undefined' || !user) { %>

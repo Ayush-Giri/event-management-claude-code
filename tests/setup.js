@@ -23,6 +23,7 @@ mockDb.exec(`
     description TEXT,
     date TEXT NOT NULL,
     time TEXT NOT NULL,
+    image TEXT,
     created_by INTEGER REFERENCES users(id),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
@@ -31,13 +32,15 @@ mockDb.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     address TEXT NOT NULL,
-    capacity INTEGER NOT NULL DEFAULT 0
+    capacity INTEGER NOT NULL DEFAULT 0,
+    image TEXT
   );
 
   CREATE TABLE IF NOT EXISTS activities (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    description TEXT
+    description TEXT,
+    image TEXT
   );
 
   CREATE TABLE IF NOT EXISTS registrations (

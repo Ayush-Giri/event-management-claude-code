@@ -1,7 +1,15 @@
+const fs = require('fs');
+const path = require('path');
 const Event = require('../models/Event');
 const Venue = require('../models/Venue');
 const Activity = require('../models/Activity');
 const Registration = require('../models/Registration');
+
+function deleteFile(filename) {
+  if (!filename) return;
+  const filePath = path.join(__dirname, '..', 'public', 'uploads', filename);
+  fs.unlink(filePath, function() {});
+}
 
 class EventController {
   static getIndex(req, res) {
@@ -101,9 +109,11 @@ class EventController {
     if (!activity_ids) activity_ids = [];
     if (!Array.isArray(activity_ids)) activity_ids = [activity_ids];
 
+    const image = req.file ? req.file.filename : null;
+
     try {
       const eventId = Event.create(
-        name, description, date, time, req.session.userId, venue_ids, activity_ids
+        name, description, date, time, req.session.userId, venue_ids, activity_ids, image
       );
 
       req.flash('success', 'Event created successfully!');
@@ -162,8 +172,17 @@ class EventController {
     if (!activity_ids) activity_ids = [];
     if (!Array.isArray(activity_ids)) activity_ids = [activity_ids];
 
+    let image = undefined;
+    if (req.file) {
+      const existingEvent = Event.findById(eventId);
+      if (existingEvent && existingEvent.image) {
+        deleteFile(existingEvent.image);
+      }
+      image = req.file.filename;
+    }
+
     try {
-      Event.update(eventId, name, description, date, time, venue_ids, activity_ids);
+      Event.update(eventId, name, description, date, time, venue_ids, activity_ids, image);
 
       req.flash('success', 'Event updated successfully!');
       res.redirect(`/events/${eventId}`);
@@ -176,6 +195,10 @@ class EventController {
 
   static postDelete(req, res) {
     try {
+      const event = Event.findById(req.params.id);
+      if (event && event.image) {
+        deleteFile(event.image);
+      }
       Event.delete(req.params.id);
       req.flash('success', 'Event deleted successfully.');
       res.redirect('/events');
@@ -183,6 +206,22 @@ class EventController {
       console.error('Error deleting event:', err);
       req.flash('error', 'An error occurred while deleting the event.');
       res.redirect('/events');
+    }
+  }
+
+  static postRemoveImage(req, res) {
+    try {
+      const event = Event.findById(req.params.id);
+      if (event && event.image) {
+        deleteFile(event.image);
+      }
+      Event.removeImage(req.params.id);
+      req.flash('success', 'Image removed successfully.');
+      res.redirect(`/events/${req.params.id}/edit`);
+    } catch (err) {
+      console.error('Error removing image:', err);
+      req.flash('error', 'An error occurred while removing the image.');
+      res.redirect(`/events/${req.params.id}/edit`);
     }
   }
 }

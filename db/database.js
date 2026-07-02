@@ -64,4 +64,17 @@ db.exec(`
   );
 `);
 
+const alterStatements = [
+  'ALTER TABLE events ADD COLUMN image TEXT',
+  'ALTER TABLE venues ADD COLUMN image TEXT',
+  'ALTER TABLE activities ADD COLUMN image TEXT'
+];
+
+alterStatements.forEach(function(sql) {
+  try {
+    db.exec(sql);
+  } catch (e) {
+  }
+});
+
 module.exports = db;

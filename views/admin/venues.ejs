@@ -11,7 +11,7 @@
       <summary class="collapsible-header">
         <h2 class="section-title">Add New Venue</h2>
       </summary>
-      <form class="form" method="POST" action="/admin/venues">
+      <form class="form" method="POST" action="/admin/venues" enctype="multipart/form-data">
         <div class="form-row">
           <div class="form-group">
             <label for="add-venue-name" class="form-label">Venue Name</label>
@@ -47,10 +47,13 @@
               min="1"
             >
           </div>
-          <div class="form-group form-actions-inline">
-            <label class="form-label">&nbsp;</label>
-            <button type="submit" class="btn btn-primary">Add Venue</button>
+          <div class="form-group">
+            <label for="add-venue-image" class="form-label">Image</label>
+            <input type="file" id="add-venue-image" name="image" class="form-control" accept="image/*">
           </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Add Venue</button>
         </div>
       </form>
     </details>
@@ -62,6 +65,7 @@
         <table class="table">
           <thead>
             <tr>
+              <th>Image</th>
               <th>Name</th>
               <th>Address</th>
               <th>Capacity</th>
@@ -71,20 +75,32 @@
           <tbody>
             <% venues.forEach(function(venue) { %>
               <tr class="venue-row" id="venue-row-<%= venue.id %>">
+                <td>
+                  <% if (venue.image) { %>
+                    <img src="/uploads/<%= venue.image %>" alt="<%= venue.name %>" class="table-thumbnail">
+                  <% } else { %>
+                    <span class="table-no-image">No image</span>
+                  <% } %>
+                </td>
                 <td><strong><%= venue.name %></strong></td>
                 <td><%= venue.address || '—' %></td>
                 <td><%= venue.capacity || '—' %></td>
                 <td class="table-actions">
                   <button type="button" class="btn btn-secondary btn-sm" onclick="toggleEditForm('venue-<%= venue.id %>')">Edit</button>
+                  <% if (venue.image) { %>
+                    <form class="form inline-form" method="POST" action="/admin/venues/<%= venue.id %>/remove-image">
+                      <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Remove image?')">Remove Image</button>
+                    </form>
+                  <% } %>
                   <form class="form inline-form" method="POST" action="/admin/venues/<%= venue.id %>/delete">
                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this venue?')">Delete</button>
                   </form>
                 </td>
               </tr>
-              
+
               <tr class="edit-row" id="edit-venue-<%= venue.id %>" style="display: none;">
-                <td colspan="4">
-                  <form class="form inline-edit-form" method="POST" action="/admin/venues/<%= venue.id %>">
+                <td colspan="5">
+                  <form class="form inline-edit-form" method="POST" action="/admin/venues/<%= venue.id %>/update" enctype="multipart/form-data">
                     <div class="form-row">
                       <div class="form-group">
                         <label class="form-label">Name</label>
@@ -97,6 +113,10 @@
                       <div class="form-group">
                         <label class="form-label">Capacity</label>
                         <input type="number" name="capacity" class="form-control" value="<%= venue.capacity || '' %>" min="1">
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">New Image</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
                       </div>
                       <div class="form-group form-actions-inline">
                         <button type="submit" class="btn btn-primary btn-sm">Save</button>

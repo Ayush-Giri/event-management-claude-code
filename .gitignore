@@ -14,3 +14,7 @@ node_modules/
 
 # Test coverage
 coverage/
+
+# Uploaded files (keep directory via .gitkeep)
+public/uploads/*
+!public/uploads/.gitkeep

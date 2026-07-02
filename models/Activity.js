@@ -19,16 +19,26 @@ class Activity {
     ).all(eventId).map(row => row.activity_id);
   }
 
-  static create(name, description) {
-    db.prepare(
-      'INSERT INTO activities (name, description) VALUES (?, ?)'
-    ).run(name, description || null);
+  static findById(id) {
+    return db.prepare('SELECT * FROM activities WHERE id = ?').get(id);
   }
 
-  static update(id, name, description) {
+  static create(name, description, image = null) {
     db.prepare(
-      'UPDATE activities SET name = ?, description = ? WHERE id = ?'
-    ).run(name, description || null, id);
+      'INSERT INTO activities (name, description, image) VALUES (?, ?, ?)'
+    ).run(name, description || null, image);
+  }
+
+  static update(id, name, description, image = undefined) {
+    if (image !== undefined) {
+      db.prepare(
+        'UPDATE activities SET name = ?, description = ?, image = ? WHERE id = ?'
+      ).run(name, description || null, image, id);
+    } else {
+      db.prepare(
+        'UPDATE activities SET name = ?, description = ? WHERE id = ?'
+      ).run(name, description || null, id);
+    }
   }
 
   static delete(id) {
@@ -37,6 +47,10 @@ class Activity {
 
   static getStats() {
     return db.prepare('SELECT COUNT(*) as count FROM activities').get().count;
+  }
+
+  static removeImage(id) {
+    db.prepare('UPDATE activities SET image = NULL WHERE id = ?').run(id);
   }
 }
 
